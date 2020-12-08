@@ -21,7 +21,7 @@ def dfs(pos):
     return 0
 
 
-font_set = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=12)
+# font_set = FontProperties(fname=r"c:\windows\fonts\微软雅黑.ttc", size=12)
 n = 50
 m = 250
 bitmap = [[0 for i in range(m)] for j in range(m)]
@@ -30,12 +30,13 @@ c = [-1 for i in range(n)]
 x = []
 y = []
 clo = []
+cmap = ['#ff0000', '#00ff00', '#0000ff', '#ffff00']
 que = []
 cap = []
-bound = []
+bound = [[],[]]
 plt.xticks([])
 plt.yticks([])
-plt.title('四色定理地图染色', fontproperties=font_set)
+plt.title(' ')
 for i in range(n):
     xk = random.randint(0, m - 1)
     yk = random.randint(0, m - 1)
@@ -79,31 +80,27 @@ for i in range(m - 1):
         if bitmap[i][j] != bitmap[i + 1][j]:
             matrix[bitmap[i][j] - 1][bitmap[i + 1][j] - 1] = 1
             matrix[bitmap[i + 1][j] - 1][bitmap[i][j] - 1] = 1
-            bound.append([i + 0.5, j])
+            bound[0].append(i + 0.5)
+            bound[1].append(j)
         if bitmap[i][j] != bitmap[i][j + 1]:
             matrix[bitmap[i][j] - 1][bitmap[i][j + 1] - 1] = 1
             matrix[bitmap[i][j + 1] - 1][bitmap[i][j] - 1] = 1
-            bound.append([i, j + 0.5])
+            bound[0].append(i)
+            bound[1].append(j + 0.5)
 dfs(0)
 print('染色完毕，开始画图。')
+
+y = list(range(m))*m
 for i in range(m):
+    x = x + [i] * m
     for j in range(m):
-        x.append(i)
-        y.append(j)
-        if c[bitmap[i][j] - 1] == 0:
-            clo.append('#ff0000')
-        if c[bitmap[i][j] - 1] == 1:
-            clo.append('#00ff00')
-        if c[bitmap[i][j] - 1] == 2:
-            clo.append('#0000ff')
-        if c[bitmap[i][j] - 1] == 3:
-            clo.append('#ffff00')
+        clo.append(cmap[c[bitmap[i][j] - 1]])
 plt.scatter(x, y, marker='s', c=clo, s=1)
-for i in range(len(bound)):
-    plt.scatter(bound[i][0], bound[i][1], s=0.5, c='k')
+plt.scatter(bound[0], bound[1], s=0.5, c='k')
 for i in range(len(cap)):
     plt.scatter(cap[i][0], cap[i][1], c='k', s=10)
     plt.annotate(i + 1, xy=(cap[i][0], cap[i][1]), xytext=(cap[i][0] + 0.1, cap[i][1] + 0.1))
+# plt.savefig("1.pdf")
 plt.show()
 plt.close()
 print("结束。")
